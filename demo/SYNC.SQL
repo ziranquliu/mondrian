@@ -1,6 +1,3 @@
-USE [CepReportDB]
-GO
-
 CREATE PROC [dbo].[ExeSyncTable]
 (
 	@lk NVARCHAR(100),
@@ -15,7 +12,7 @@ BEGIN
 	IF NOT EXISTS(SELECT SCHEMA_NAME(t.schema_id) SchemaName,t.name TableName FROM sys.tables t where SCHEMA_NAME(t.schema_id)=@schema AND t.name=@table)
 	BEGIN
 		DECLARE @init NVARCHAR(max)
-		SET @init='SELECT * INTO ['+@schema+'].['+@table+'] FROM OPENQUERY(['+@lk+'],''select * from ['+@schema+'].['+@table+']'')'
+		SET @init='SELECT * INTO ['+@schema+'].['+@table+'] FROM OPENQUERY(['+@lk+'],''select * from '+@schema+'.'+@table+''')'
 		EXEC SP_EXECUTESQL @init
 		PRINT('sync init success')
 	END
